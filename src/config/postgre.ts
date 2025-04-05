@@ -14,25 +14,48 @@ class Postgre {
 
   public db: Pool;
 
+
+
   constructor() {
 
-    this.db = new Pool({
-      user: process.env.POSTGRES_USER,
-      password: process.env.POSTGRES_PASSWORD,
-      host: process.env.POSTGRES_SERVER,
-      database: process.env.POSTGRES_DB_NAME,
-      ssl: { rejectUnauthorized: true },
-    });
+
+    try { /// ## try start
+
+      // configure postgre client
+      this.db = new Pool({
+        user: process.env.POSTGRES_USER,
+        password: process.env.POSTGRES_PASSWORD,
+        host: process.env.POSTGRES_SERVER,
+        database: process.env.POSTGRES_DB_NAME,
+        ssl: { rejectUnauthorized: true },
+      });
 
 
-    // run this to create tables if doesn't exist
-    this.createTable();
+      // run this to create tables if doesn't exist
+      this.createTable();
 
 
-    this.db.on("error", (err) => {
-      console.log("Error on PG client ", err);
-      throw new ErrorHandler({ message: "Postgre client connection error : ", status: StatusCode.INTERNAL_SERVER_ERROR });
-    });
+      // ###### get errors
+      this.db.on("error", (err) => {
+        console.log("Error on PG client ", err);
+        throw new ErrorHandler({ message: "Postgre client connection error : ", status: StatusCode.INTERNAL_SERVER_ERROR });
+      });
+
+
+
+    } catch (err) {
+
+      if (err instanceof DatabaseError) {
+        postgreErrorHandler(err);
+      } else {
+        throw new ErrorHandler({ status: StatusCode.INTERNAL_SERVER_ERROR, message: "Error on postgre client connection" });
+      }
+
+
+      // stop server if error
+      process.exit(1);
+
+    }
 
   }
 
