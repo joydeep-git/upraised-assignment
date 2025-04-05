@@ -1,0 +1,42 @@
+{
+  "name": "upraised-assignment-api",
+  "version": "1.0.0",
+  "description": "A tool for IMF Heroes to keep a record of their weapons.",
+  "homepage": "https://github.com/joydeep-git/upraised-assignment-api#readme",
+  "bugs": {
+    "url": "https://github.com/joydeep-git/upraised-assignment-api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joydeep-git/upraised-assignment-api.git"
+  },
+  "license": "ISC",
+  "author": "Joydeep Das ( joydeep-git )",
+  "type": "commonjs",
+  "main": "src/server.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.8",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.4.0",
+    "nodemon": "^3.1.4",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@types/pg": "^8.11.11",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fantasy-name-generator": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.14.1"
+  }
+}
