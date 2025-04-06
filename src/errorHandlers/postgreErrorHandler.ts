@@ -5,30 +5,30 @@ import ErrorHandler from "./errorHandler";
 
 const postgreErrorHandler = (err: DatabaseError) => {
 
-  let status: number = StatusCode.INTERNAL_SERVER_ERROR;
-  let message = "Database Error";
+  let status: number;
+  let message: string;
 
 
   switch (err.code) {
 
     case "23505":
       status = StatusCode.CONFLICT;
-      message = "Duplicate key violation";
-      break;DatabaseError
+      message = "Duplicate value in a column with UNIQUE constraint";
+      break;
 
     case "23503":
       status = StatusCode.NOT_FOUND;
-      message = "Foreign key constraint violation";
+      message = "Insert/update on a foreign key that doesn't exist";
       break;
 
     case "23502":
       status = StatusCode.BAD_REQUEST;
-      message = "Null value violation";
+      message = "Inserting NULL into a NOT NULL column";
       break;
 
     case "23514":
       status = StatusCode.BAD_REQUEST;
-      message = "Check constraint violation";
+      message = "Violating a CHECK constraint";
       break;
 
     case "42601":
@@ -54,6 +54,21 @@ const postgreErrorHandler = (err: DatabaseError) => {
     case "53300":
       status = StatusCode.INTERNAL_SERVER_ERROR;
       message = "Too many connections. Try again later.";
+      break;
+
+    case "22003":
+      status = StatusCode.BAD_REQUEST;
+      message = "Storing a number too big for the column type";
+      break;
+
+    case "22001":
+      status = StatusCode.BAD_REQUEST;
+      message = "Inserting string longer than column's character limit";
+      break;
+
+    default:
+      status = StatusCode.INTERNAL_SERVER_ERROR;
+      message = "Database Error";
       break;
 
   }
