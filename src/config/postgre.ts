@@ -18,8 +18,7 @@ class Postgre {
 
   constructor() {
 
-
-    try { /// ## try start
+    try {
 
       // configure postgre client
       this.db = new Pool({
@@ -35,14 +34,6 @@ class Postgre {
       this.createTable();
 
 
-      // ###### get errors
-      this.db.on("error", (err) => {
-        console.log("Error on PG client ", err);
-        throw new ErrorHandler({ message: "Postgre client connection error : ", status: StatusCode.INTERNAL_SERVER_ERROR });
-      });
-
-
-
     } catch (err) {
 
       if (err instanceof DatabaseError) {
@@ -56,6 +47,13 @@ class Postgre {
       process.exit(1);
 
     }
+
+
+    // get errors
+    this.db.on("error", (err) => {
+      console.log("Error on PG client ", err);
+      throw new ErrorHandler({ message: "Postgre client connection error : ", status: StatusCode.INTERNAL_SERVER_ERROR });
+    });
 
   }
 
