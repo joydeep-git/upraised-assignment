@@ -26,14 +26,30 @@ const tokenValidator = async (req: Request, res: Response, next: NextFunction) =
   const token: string = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
 
+
   // #### if token isnt there
   if (!token) {
     return next(errRes("No TOKEN found!", StatusCode.UNAUTHORIZED));
   }
 
 
-  // #### if token is present then get userId
-  const { userId } = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload;
+  let userId: string;
+
+
+  try {
+
+    // #### if token is present then get userId
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as JwtPayload;
+
+    userId = decoded.userId;
+
+  } catch (err) {
+
+    // #### return error if token is invalid
+
+    return next(errRes("Invalid token!", StatusCode.UNAUTHORIZED ));
+
+  }
 
 
   // #### invalid token check
