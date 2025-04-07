@@ -9,9 +9,13 @@ class AuthModel {
 
 
   // ##### GET user details from email id
-  public async findUserByEmail(email: string): Promise<UserDataType> {
+  public async findUserByEmail(email: string, getPassword: boolean = false): Promise<UserDataType> {
 
-    return (await postgres.db.query("SELECT *, '*****' AS password FROM users WHERE email = $1", [email])).rows[0];
+    return (await postgres.db.query(
+      getPassword
+        ? "SELECT * FROM users WHERE email = $1"
+        : "SELECT *, '*****' AS password FROM users WHERE email = $1", [email]
+    )).rows[0];
 
   }
 
@@ -29,7 +33,7 @@ class AuthModel {
   // ##### CREATE new user
   public async createNewUser({ name, email, hashedPassword }: { name: string; email: string; hashedPassword: string; }): Promise<UserDataType> {
 
-    return (await postgres.db.query("INSERT INTO users ( name, email, password ) VALUES ( $1, $2, $3 ) RETURNING *, '*****' AS password",[name, email, hashedPassword])).rows[0];
+    return (await postgres.db.query("INSERT INTO users ( name, email, password ) VALUES ( $1, $2, $3 ) RETURNING *, '*****' AS password", [name, email, hashedPassword])).rows[0];
 
   }
 
