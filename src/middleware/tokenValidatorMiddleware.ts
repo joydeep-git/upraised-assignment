@@ -2,10 +2,13 @@
 
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { DatabaseError } from "pg";
 
-import { StatusCode, UserDataType } from "../types";
+import { BlacklistedTokenType, StatusCode, UserDataType } from "../types";
 import authModel from "../models/authModel";
 import { errRes } from "../utils/helperFunctions";
+import blackListedToken from "../models/blacklistedToken";
+import postgreErrorHandler from "../errorHandlers/postgreErrorHandler";
 
 
 
@@ -43,11 +46,39 @@ const tokenValidator = async (req: Request, res: Response, next: NextFunction) =
 
     userId = decoded.userId;
 
+    // ####### check token expiry date less than current date
+    if (decoded.exp! < Math.floor(Date.now() / 1000)) {
+      return next(errRes("Session Expired! Please Login again.", StatusCode.UNAUTHORIZED));
+    }
+
+
+    try {
+      // ##### check blacklisted tokens
+      const res: BlacklistedTokenType = await blackListedToken.getBlacklistedToken(token);
+
+      // #### if token exists in blacklist send error
+      if (res) {
+
+        console.log("stop blacklist token", token);
+
+        return next(errRes("Session Expired! Please Login again.", StatusCode.UNAUTHORIZED));
+      }
+
+    } catch (err) {
+
+      if (err instanceof DatabaseError) {
+        postgreErrorHandler(err);
+      } else {
+        return next(errRes("Session validation Error! Please try again", StatusCode.UNAUTHORIZED));
+      }
+
+    }
+
   } catch (err) {
 
     // #### return error if token is invalid
 
-    return next(errRes("Invalid token!", StatusCode.UNAUTHORIZED ));
+    return next(errRes("Invalid token!", StatusCode.UNAUTHORIZED));
 
   }
 
