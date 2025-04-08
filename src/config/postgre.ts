@@ -75,6 +75,17 @@ class Postgre {
         )`
       );
 
+
+
+      await this.db.query(
+        `CREATE TABLE IF NOT EXISTS blacklisted_tokens (
+          token TEXT PRIMARY KEY,
+          blacklisted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`
+      );
+
+
+
       await this.db.query(`
         DO $$
         BEGIN
