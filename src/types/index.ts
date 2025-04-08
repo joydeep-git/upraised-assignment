@@ -37,3 +37,11 @@ export interface GadgetDataType {
   created_at: Date;
   updated_at: Date;
 }
+
+
+
+
+export interface BlacklistedTokenType {
+  token: string;
+  blacklisted_at: Date;
+}
