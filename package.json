@@ -1,14 +1,14 @@
 {
-  "name": "upraised-assignment-api",
+  "name": "imf-gadget-api",
   "version": "1.0.0",
-  "description": "A tool for IMF Heroes to keep a record of their weapons.",
-  "homepage": "https://github.com/joydeep-git/upraised-assignment-api#readme",
+  "description": "About A secure and scalable API for managing Impossible Missions Force (IMF) gadgets, built with Node.js, TypeScript, PostgreSQL, JWT authentication, and deployed on Render. This API features robust user authentication, token validation, and gadget management.Resources",
+  "homepage": "https://github.com/joydeep-git/imf-gadget-api#readme",
   "bugs": {
-    "url": "https://github.com/joydeep-git/upraised-assignment-api/issues"
+    "url": "https://github.com/joydeep-git/imf-gadget-api/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joydeep-git/upraised-assignment-api.git"
+    "url": "git+https://github.com/joydeep-git/imf-gadget-api.git"
   },
   "license": "ISC",
   "author": "Joydeep Das ( joydeep-git )",
