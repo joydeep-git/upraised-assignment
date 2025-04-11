@@ -67,7 +67,7 @@ class AuthModel {
 
     values.push(userId);
 
-    const query = `UPDATE users SET ${fields.join(", ")} WHERE id = $${i} RETURNING *, '*****' AS password`;
+    const query = `UPDATE users SET ${fields.join(", ")}, updated_at = CURRENT_TIMESTAMP  WHERE id = $${i} RETURNING *, '*****' AS password`;
 
     return (await postgres.db.query(query, values)).rows[0];
 
