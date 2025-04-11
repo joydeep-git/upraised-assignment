@@ -40,9 +40,36 @@ class AuthModel {
 
 
   // ##### update user
-  public async updateUser({ userId, name, email, hashedPassword }: { userId: string; name: string; email: string; hashedPassword: string; }): Promise<UserDataType> {
+  public async updateUser({ userId, name, email, hashedPassword }: { userId: string; name?: string; email?: string; hashedPassword?: string; }): Promise<UserDataType> {
 
-    return (await postgres.db.query("UPDATE users SET name = $1, email = $2, password = $3 WHERE id = $4 RETURNING *, '*****' AS password ", [name, email, hashedPassword, userId])).rows[0];
+
+    const fields: string[] = [];
+
+    const values: string[] = [];
+
+    let i: number = 1;
+
+
+    if (name) {
+      fields.push(`name = $${i++}`);
+      values.push(name);
+    }
+
+    if (email) {
+      fields.push(`email = $${i++}`);
+      values.push(email);
+    }
+
+    if (hashedPassword) {
+      fields.push(`password = $${i++}`);
+      values.push(hashedPassword);
+    }
+
+    values.push(userId);
+
+    const query = `UPDATE users SET ${fields.join(", ")} WHERE id = $${i} RETURNING *, '*****' AS password`;
+
+    return (await postgres.db.query(query, values)).rows[0];
 
   }
 
